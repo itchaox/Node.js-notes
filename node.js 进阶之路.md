@@ -1059,7 +1059,554 @@ apiRouter.post('/post', (req, res) => {
 3. 根据前两步得到的数据，拼接出一个函数调用的字符串
 4. 把上一步拼接得到的字符串，响应给客户端的 `<script>` 标签进行解析执行
 
-## 7. 数据库与身份验证
+## 7. 数据库
 
+### 7.1 数据库基本概念
 
+#### 7.1.1 什么是数据库
 
+* 数据库(database)：组织、存储和管理数据的仓库
+* 为了方便管理互联网世界的数据，就有了数据库管理系统的概念（简称：数据库）
+* 用户可以对数据库中的数据进行新增、查询、更新、删除等操作
+
+#### 7.1.2 常见数据库及分类
+
+* 最常见数据库有如下几种：
+  1. MySQL 数据库（使用最广泛、流行度最高的开源免费数据库；Community 社区免费版 + Enterprise 企业版 ）
+  2. Oracle 数据库（收费）
+  3. SQL Server 数据库（收费）
+  4. MongoDB 数据库 （Community 社区免费版 + Enterprise 企业版 ）
+* 数据库分类：
+* 传统型数据库（关系型数据库、SQL 数据库）：MySQL、Oracle、SQL Server，这三者的设计理念相同，用法比较类似
+* 新型数据库（非关系数据库、NoSQL 数据库）：MongoDB，它在一定程度上弥补了传统型数据库的缺陷
+
+#### 7.1.3 传统型数据库的数据组织结构
+
+* 数据组织结构：数据以什么样的结构进行存储
+* 传统型数据库的数据组织架构，与 Excel 中数据的组织结构类似
+* 传统型数据库的数据组织结构组成：数据库 (database)、数据表 (table)、数据行 (row)、字段 (field) 
+  1. 数据库 -> 工作簿
+  2. 数据表 -> 工作表
+  3. 数据行 -> 每行数据
+  4. 字段 -> 列
+  5. 每个字段都有对应的数据类型
+* 实际开发中库、表、行、字段的关系：
+  1. 一般情况下，每个项目都有对应独立的数据库
+  2. 不同数据，需要存储到数据库中不同的表。如：用户数据存储到 users 表，图书数据存储到 books 表
+  3. 表中的行，代表每条具体的数据
+  4. 每个表中具体存储哪些信息，由字段决定。如：users 表设计 id、username、password 3个字段
+
+### 7.2 安装并配置 MySQL
+
+#### 7.2.1 安装 MySQL 相关软件
+
+* 开发人员安装：MySQL Server 和 MySQL Workbench
+* MySQL Server：提供数据存储和服务的软件
+* MySQL Workbench：可视化的 MySQL 管理工具，方便操作存储在 MySQL Server 中的数据
+
+### 7.3 创建数据库
+
+#### 7.3.1 设计表
+
+1. 表名、表注释
+2. 字段名、字段注释、字段数据类型、字段特殊标识
+
+* DataType 数据类型：
+  1. int 整数
+  2. varchar(len) 字符串
+  3. tinyint(1) 布尔值
+* 字段特殊标识：
+  1. PK (Primary Key) ：主键、唯一标识
+  2. NN（Not Null）：值不允许为空
+  3. UQ（Unique）：值唯一
+  4. AI（Auto Increment）：值自动增长
+  5. Default/Expression：默认值
+
+#### 7.3.2 使用 SQL 管理数据库
+
+1.  什么是 SQL
+
+   * 概念：结构化查询语言，专门用来访问和处理数据库的编程语言
+   * 作用：以编程形式，操作数据库内的数据
+   * 注意点：
+     1. SQL 是一门数据库编程语言
+     2. 使用 SQL 语言编写出来的代码，叫 SQL 语句
+     3. SQL 语言只在关系型数据库中使用（如：MySQL、Oracle、SQL Server），非关系型数据库（如：MongoDB）不支持 SQL 语言
+
+2. SQL 使用场景
+
+   * 新增、删除、查询、更新数据
+   * 创建新数据库、在数据库中创建新表
+   * 在数据库中创建存储过程、视图
+   * 等等
+
+3. SQL 中的 SELECT 语句
+
+   * 作用：查询数据
+
+   * 执行的结果被存储在一个结果表中（被称为结果集）
+
+   * 语法格式：
+
+     ```sql
+     -- 注释格式
+     -- 查询指定表的所有列数据
+     -- 伪代码: SELECT * FORM 表名称
+     SELECT * FROM users
+     -- 查询指定表中的指定列(字段)数据
+     -- 伪代码: SELECT 列名称 FROM 表名称
+     SELECT username FROM users
+     ```
+
+   * 注意：
+
+     1. SQL 语句中的关键字对大小写不敏感。如：SELECT 等同 select，FROM 等同 from
+     2. 多个列名之间用逗号（,）分隔
+
+4. SQL 中的 INSERT INTO 语句
+
+   * 作用：新增数据
+
+   * 语法格式：
+
+     ```sql
+     -- 伪代码: INSERT INTO table_name （列1, 列2...） VALUES (值1, 值2...)
+     INSERT INTO users (id) VALUES (99)
+     ```
+
+   * 注意：
+     1. 向指定表插入数据时，列的值通过 VALUES 指定
+     2. 列和值必须要对应指定，多个列和多个值之间，用逗号 (,) 分隔
+
+5. SQL 中的 UPDATE 语句
+
+   * 作用：更新数据
+
+   * 语法格式：
+
+     ```sql
+     -- 伪代码: UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 = 对应列的值
+     UPDATE users SET username = 'itchao' WHERE username = 'zs'
+     ```
+
+   * 注意：
+
+     1. UPDATE 指定表的名称
+     2. SET 指定列的新值
+     3. WHERE 指定更新条件
+     4. 多个列之间，用逗号 (,) 分隔
+
+6. SQL 中的 DELETE 语句
+
+   * 作用：删除数据
+
+   * 语法格式：
+
+     ```sql
+     -- 伪代码: DELETE FROM 表名称 WHERE 列名称 = 对应列的值
+     DELETE FROM users WHERE username = 'aaaqa';
+     ```
+
+   * 注意：从指定表中，根据 WHERE 条件，删除对应数据行
+   
+7. SQL 中的 WHERE 子句
+
+   * 作用：限定选择条件
+
+   * 使用场景：在 SELECT、UPDATE、DELETE 语句中，都可使用 WHERE 子句来限定选择条件
+
+   * 语法格式：
+
+     ```sql
+     -- 查询语句
+     SELECT 列名称 FROM 表名称 WHERE 列名称 运算符 值
+     -- 更新语句
+     UPDATE 表名称 SET 列名称 = 新值 WHERE 列名称 运算符 值
+     -- 删除语句
+     DELETE FROM 表名称 WHERE 列名称 运算符 值
+     ```
+
+   * 运算符：
+
+     * `=`：等于
+     * `<>`：不等于（在某些版本的 SQL 中，操作符 <> 可以写成 != ）
+     * `>`：大于
+     * `<`：小于
+     * `>=`：大于等于
+     * `<=`：小于等于
+     * `BETWEEN`：在某个范围内
+     * `LIKE`：搜索某种模式
+
+8.  SQL 中的 AND 和 OR 运算符
+
+    * 作用：把两个或多个条件结合起来
+    * AND：必须同时满足多个条件
+      * 示例：`SQL * FROM users WHERE state = 0 AND id = 3`
+    * OR：只要满足任意一个条件即可
+      * 示例：`SQL * FROM users WHERE username= 'itchao' OR id < 2`
+
+9.  SQL 中的 ORDER BY 子句
+
+    * 作用：根据指定列对结果集排序
+    * 注意：默认按升序进行排序，ASC 关键字可省略；若想按降序进行排序，则可使用 DESC 关键字
+    * 升序示例：`select * from users order by password`
+    * 降序示例：`select * from users order by password desc`
+    * 多重排序：
+      * 作用：先按大分类排序，在按大分类中的小分类进行排序
+      * 语法示例：`select * from users order by password, id desc`
+
+10.  SQL 中的 COUNT(*) 函数
+
+     * 作用：返回查询结果的总数据条数
+
+     * 语法格式：
+
+       ```sql
+       -- 伪代码: select count(*) from 表名称 WHERE 列名 运算符 值
+       select count(username) from users where id = 100
+       ```
+
+     * 给列名设置别名：
+
+       * 使用 AS 设置别名
+       * 示例：`select count(username) as name from users where id = 100`
+
+### 7.4 在项目中操作 MySQL
+
+#### 7.4.1 在项目中操作数据库的步骤
+
+1. 安装操作 MySQL 数据库的第三方模块（mysql）
+2. 通过 mysql 模块链接到 MySQL 数据库
+3. 通过 mysql 模块执行 SQL 语句
+
+#### 7.4.2 安装与配置 mysql 模块
+
+1. 安装 mysql 模块：
+
+   * 概念：mysql 模块是托管于 npm 上的第三方模块
+   * 作用：提供了在 Node.js 项目中连接和操作 MySQL 数据库的能力
+   * 安装命令：`npm install mysql`
+
+2. 配置 mysql 模块：
+
+   1. 导入 mysql 模块
+
+   2. 建立与 MySQL 数据库连接
+
+   3. 语法格式：
+
+      ```javascript
+      // 1. 导入 mysql 模块
+      const mysql = require('mysql')
+      // 2. 建立与 MySQL 数据库连接关系
+      const db = mysql.createPool({
+        host: '127.0.0.1',  // 数据库 IP 地址
+        user: 'root',  // 数据库账号
+        password: 'admin123',  // 数据库密码
+        database: 'database01'  // 指定操作哪个数据库
+      })
+      ```
+
+ #### 7.4.3 使用 mysql 模块操作 MySQL 数据库
+
+1. 查询数据
+
+   * 语法格式：
+
+     ```javascript
+     const select = 'select * from useras'
+     // 执行 select 查询语句，输出结果是数组
+     db.query(select, (err, res) => {
+       if (err) {
+         console.log('错误信息：', err.message);
+       }
+       else {
+         console.log(res);
+       }
+     })
+     ```
+
+     
+
+2. 插入数据
+
+   * 语法格式：
+
+     ```javascript
+     // 1.定义插入数据对象
+     const user = {
+       username: '插入数据1',
+       password: 'q'
+     }
+     // 2. 待执行的 SQL 语句，英文的 ? 表示占位符
+     const insertInto = 'insert into users (username, password) values (?, ?)'
+     // 3. 使用数组形式，依次为 ? 占位符指定具体值
+     // 执行 insert into 语句，输出结果是对象
+     db.query(insertInto, [user.username, user.password], (err, res) => {
+       if (err) {
+         return console.log(err.message);
+       }
+       // 通过 affectedRows 属性，可以判断插入数据是否成功
+       if (res.affectedRows === 1) {
+         console.log('插入数据成功！');
+       }
+     })
+     ```
+
+     
+
+3. 插入数据的简写方式
+
+   * 前提：新增数据时，如果数据对象的每个属性和数据表的字段 一 一 对应，则可使用插入数据的简写方式
+
+   * 语法格式：
+
+     ```javascript
+     // 1.定义插入数据对象
+     const userA = {
+       username: '新数据',
+       password: 'a'
+     }
+     // 2. 待执行的 SQL 语句，set 表示设置值，英文的 ? 表示占位符
+     const insertIntoA = 'insert into users set ?'
+     // 执行 insert into 语句，输出结果是对象
+     db.query(insertIntoA, userA, (err, res) => {
+       if (err) {
+         return console.log(err.message);
+       }
+       // 通过 affectedRows 属性，可以判断插入数据是否成功
+       if (res.affectedRows === 1) {
+         console.log('数据插入成功');
+       }
+     })
+     ```
+
+4. 更新数据
+
+   * 语法格式：
+
+     ```javascript
+     // 1. 找到将更新的数据对象并写入新值到该数据对象
+     const userC = {
+       id: 7,
+       username: '更新数据2',
+       password: 'b'
+     }
+     // 2. 定义 SQL 语句
+     const updateC = 'update users set username=?, password=? where id=?'
+     // 3. 执行 SQL 语句
+     // 执行 update 语句，输出结果是对象
+     db.query(updateC, [userC.username, userC.password, userC.id], (err, res) => {
+       if (err) {
+         return console.log(err.message);
+       }
+       // 通过 affectedRows 属性，可以判断插入数据是否成功
+       if (res.affectedRows) {
+         console.log('更新数据成功！');
+       }
+     })
+     ```
+
+     
+
+5. 更新数据的简写方式
+
+   * 前提：更新数据时，如果数据对象的每个属性和数据表的字段 一 一 对应，则可使用更新数据的简写方式
+
+   * 语法格式：
+
+     ```javascript
+     // 1. 找到将更新的数据对象并写入新值到该数据对象
+     const userB = {
+       id: 6,
+       username: '更新数据B2',
+       password: 'b'
+     }
+     // 2. 定义 SQL 语句
+     const update = 'update users set ? where  id = ?'
+     // 3. 执行 SQL 语句
+     // 执行 update 语句，输出结果是对象
+     db.query(update, [userB, userB.id], (err, res) => {
+       if (err) {
+         return console.log(err.message);
+       }
+       // 通过 affectedRows 属性，可以判断插入数据是否成功
+       if (res.affectedRows) {
+         console.log('更新数据成功！B');
+       }
+     })
+     ```
+
+6. 删除数据
+
+   * 注意：
+
+     1. 删除数据时，推荐根据 id 这样的唯一标识，来删除对应的数据
+     2. 如果 SQL 语句中有多个占位符，则必须使用数组为每个占位符指定具体的值
+     3. 如果 SQL 语句中只有一个占位符，则可以省略数组
+
+   * 语法格式：
+
+     ```javascript
+     // 1. 定义 SQL 语句
+     const deleteA = 'delete from users where id = ?'
+     // 2. 执行 SQL 语句
+     // 执行 delete 语句，输出结果是对象
+     db.query(deleteA, 7, (err, res) => {
+       if (err) {
+         return console.log(err.message);
+       }
+       // 通过 affectedRows 属性，可以判断删除数据是否成功
+       if (res.affectedRows === 1) {
+         console.log('删除数据成功！');
+       }
+     })
+     ```
+
+7. 标记删除
+
+   * 原因：使用 delete 语句，会直接把数据从表中删除。为了保险起见，推荐使用标记删除形式，模拟删除动作。
+
+   * 概念：在表中设置类似于 status 这样的状态字段，来标记当前这条数据是否被删除
+
+   * 解析：当用户执行标记删除时，实际上没有执行 delete 语句把数据删除，而是执行 update 语句进行更新类似 status 状态字段
+
+   * 语法格式：
+
+     ```javascript
+     // 1. 定义 SQL 语句
+     const deleteTag = 'update users set state = ? where id = ?'
+     // 2. 执行 SQL 语句
+     // 执行 update 语句，输出结果是对象
+     db.query(deleteTag, [1, 6], (err, res) => {
+       if (err) {
+         return console.log(err.message);
+       }
+       // 通过 affectedRows 属性，可以判断标记删除数据是否成功
+       if (res.affectedRows === 1) {
+         console.log('标记删除成功！');
+       }
+     })
+     ```
+
+## 8. 前后端的身份认证
+
+### 8.1 Web 开发模式
+
+* 分类：
+  1. 服务端渲染的传统 Web 开发模式
+     * 概念：服务器发送给客户端的 HTML 页面，是在服务器通过字符串拼接，动态生成的。因此，客户端不需要使用 AJAX 额外请求页面数据
+     * 优点：
+       1. 前端耗时少：服务端动态生成 HTML 内容，浏览器直接渲染页面。尤其是移动端，更省电
+       2. 有利于 SEO：服务端响应完整的 HTML 内容，爬虫更容易爬取获得信息
+     * 缺点：
+       1. 占用服务器端资源：服务器端完成 HTML 内容拼接，如果请求较多，会对服务器造成访问压力
+       2. 不利于前后端分离，开发效率低：无法分工合作，对于前端复杂度高的项目，不利于项目高效开发
+  2. 前后端分离的新型 Web 开发模式
+     * 概念：后端负责提供 API 接口，前端使用 AJAX 调用接口的开发模式
+     * 优点：
+       1. 开发体验好：前端负责 UI 页面开发，后端负责 API 接口开发，且前端有更多选择性
+       2. 用户体验好：AJAX 技术的广泛应用，提高了用户体验，可轻松实现页面局部刷新
+       3. 减轻服务器端的渲染压力：页面最终在每个用户的浏览器中生成
+     * 缺点：
+       1. 不利于 SEO：完整的 HTML 页面需要在客户端动态拼接完成，所有爬虫无法爬取页面的有效信息
+       2. 解决方案：利用 Vue、React 等前端框架的 SSR 技术能解决 SEO 问题
+  3. 如何选择 Web 开发模式
+     * 选择方式：根据业务场景选择合适的开发模式
+     * 使用场景：
+       1. 企业级网站：主要负责展示，没有复杂的交互，且需要良好的 SEO，推荐使用服务器端渲染开发模式
+       2. 后台管理项目：交互性较强，不考虑 SEO，推荐使用前后端分离开发模式
+       3. 同时兼顾首页渲染速度和前后端分离开发效率：则可采用首页服务器端渲染 + 其他页面前后端分离开发模式
+
+### 8.2 身份认证
+
+#### 8.2.1 什么是身份认证
+
+* 身份认证（身份验证、鉴权）：通过一定手段，完成对用户身份的确认
+* 生活中的身份认证：高铁验票乘车、手机密码、微信支付密码等
+* Web 开发中用户身份认证：网站的手机验证码登录、邮箱密码登录等
+
+#### 8.2.2 为什么需要身份认证
+
+* 目的：确认用户的身份信息
+
+#### 8.2.3 不同开发模式下的身份认证
+
+1. 服务端渲染：Session 认证机制（推荐）
+2. 前后端分离：JWT 认证机制（推荐）
+
+### 8.3 Session 认证机制
+
+#### 8.3.1 HTTP 协议的无状态性
+
+* 概念：客户端的每次 HTTP 请求都是独立的，连续多个请求之间没有直接关系，服务器不会主动保留每次 HTTP 请求状态
+
+#### 8.3.2 如何突破 HTTP 无状态的限制
+
+* 注意：现实生活中的会员卡身份认证方式，Web 开发中专业术语是 Cookie
+
+#### 8.3.3 什么是 Cookie
+
+* 概念：存储在用户浏览器中的一段不超过 4KB 的字符串
+* 构成：由一个名称、一个值和其它几个用于控制 Cookie 有效期、安全性、使用范围的可选属性组成
+* 注意：不同域名下 Cookie 各自独立，每当客户端发起请求时，自动把当前域名下所有未过期的 Cookie 一同发送到服务器
+* 特性：
+  1. 自动发送
+  2. 域名独立
+  3. 4KB 限制
+  4. 过期时限
+
+#### 8.3.4 Cookie 在身份认证的作用
+
+* 作用：验证用户身份，连接客户端和服务器端
+* 首次请求：
+  1. 客户端第一次请求服务器时
+  2. 服务器通过响应头的方式，向客户端发送一个可身份验认证的 Cookie
+  3. 客户端自动将 Cookie 保存在浏览器中
+* 再次请求：
+  1. 客户端浏览器再次请求服务器时
+  2. 浏览器会自动将身份认证相关的 Cookie，通过请求头的形式发送给服务器
+  3. 服务器验证客户端的身份后，响应给客户端相关内容
+
+#### 8.3.5 Cookie 不具有安全性
+
+* Cookie 存储在浏览器中，而且浏览器也提供读写 Cookie 的 API
+*  Cookie 很容易被伪造，不具有安全性
+* 注意：千万不要让服务器将重要的隐私数据，通过 Cookie 形式发送给浏览器；如：用户身份信息、密码等
+* 提高身份认证安全性的操作：客户端提供 Cookie + 服务器验证 Cookie
+
+#### 8.3.6 Session 工作原理
+
+* 工作原理：就是利用 Cookie 在客户端与服务器的连接作用
+* 注意：
+  1. 将用户重要的隐私信息存储在服务器
+  2. 服务器响应给客户端的只是 Cookie
+  3. 客户端首次请求服务器时，服务器会存储用户信息，然后返回 Cookie 给客户端
+  4. 服务器再次接收到客户端请求时，会根据客户端传递的 Cookie 去匹配服务器存储的用户信息，若匹配成功， 则响应用户特定内容给客户端 
+
+### 8.4 在 Express 中使用 Session 认证
+
+1. 安装 express-session 中间件
+
+   * 命令：`npm install express-session`
+
+2. 配置 express-session 中间件
+
+   * 安装成功后，通过 app.use( ) 注册 express-session 中间件
+
+   * 语法格式：
+
+     ```javascript
+     // 1. 导入 express-session 中间件
+     const session = require('express-session')
+     // 2. 配置 express-session 中间件
+     app.use(session({
+     secret: 'keyboard cat',  // secret 属性的值可以为任意字符串
+     resave: false,   // 固定写法
+     saveUninitialized: true  // 固定写法
+     }))
+     ```
+
+   3.向 session 中存数据
+
+   * 配置成功后，通过 req.session 来访问和使用 session 对象，从而存储用户的关键信息 
