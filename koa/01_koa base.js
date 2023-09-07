@@ -3,15 +3,18 @@
  * @Author     : wangchao
  * @Date       : 2023-09-06 16:43
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-07 10:19
+ * @LastTime   : 2023-09-07 10:20
  * @desc       :
  */
 const Koa = require("koa");
 const KoaRouter = require("@koa/router");
-
+const multer = require("@koa/multer");
 const bodyParser = require("koa-bodyparser");
 
 const app = new Koa();
+const formParser = multer({
+  dest: "./imgs",
+});
 
 app.use(bodyParser());
 
