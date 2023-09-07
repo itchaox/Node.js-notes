@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-06 16:43
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-06 18:17
+ * @LastTime   : 2023-09-07 10:19
  * @desc       :
  */
 const Koa = require("koa");
@@ -24,14 +24,48 @@ userRouter.get("/login", (ctx, next) => {
 
 // get params /:id
 userRouter.get("/login/:id", (ctx, next) => {
-  const id = ctx.params.id;
+  const is = true;
 
-  ctx.body = "您输入的id为：" + id;
+  if (is) {
+    console.log("成功");
+    ctx.body = "成功";
+
+    ctx.app.emit("error", 500, ctx);
+  } else {
+    ctx.body = "wangchao";
+    ctx.app.emit("error", 401, ctx);
+  }
+});
+
+//FIXME 错误处理
+app.on("error", (code, ctx) => {
+  let message = "";
+
+  switch (code) {
+    case 401:
+      message = "鉴权失败";
+      break;
+    case 500:
+      message = "服务器错误";
+      break;
+  }
+
+  ctx.body = {
+    code,
+    message,
+  };
 });
 
 // post json
 userRouter.post("/login", (ctx, next) => {
-  console.log(ctx.request.body);
+  ctx.body = "123";
+  const is = true;
+  if (!is) {
+    console.log("成功");
+  } else {
+    console.log(ctx);
+    ctx.body = "123";
+  }
 });
 
 app.use(userRouter.routes());
