@@ -3,19 +3,16 @@
  * @Author     : wangchao
  * @Date       : 2023-09-07 16:58
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-07 17:17
+ * @LastTime   : 2023-09-08 10:24
  * @desc       :
  */
 
 const KoaRouter = require("@koa/router");
+const UserController = require("../controller/user.controller");
 
 const userRouter = new KoaRouter({ prefix: "/user" });
 
-userRouter.post("/register", (ctx, next) => {
-  console.log("注册信息：", ctx.request.body);
-  ctx.body = "恭喜你！注册成功！";
-  next();
-});
+userRouter.post("/register", UserController.create);
 
 const useUserRouter = (app) => {
   app.use(userRouter.routes());

@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-07 17:05
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-07 17:13
+ * @LastTime   : 2023-09-08 10:21
  * @desc       :
  */
 
@@ -11,7 +11,7 @@ const Koa = require("koa");
 const KoaRouter = require("@koa/router");
 const bodyParser = require("koa-bodyparser");
 
-const useUserRouter = require("../router/user-router");
+const useUserRouter = require("../router/user.router");
 
 const app = new Koa();
 
