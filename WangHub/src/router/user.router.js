@@ -3,16 +3,17 @@
  * @Author     : wangchao
  * @Date       : 2023-09-07 16:58
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-08 10:24
+ * @LastTime   : 2023-09-08 15:04
  * @desc       :
  */
 
 const KoaRouter = require("@koa/router");
 const UserController = require("../controller/user.controller");
+const { verifyUser } = require("../middleware/user.middleware");
 
 const userRouter = new KoaRouter({ prefix: "/user" });
 
-userRouter.post("/register", UserController.create);
+userRouter.post("/register", verifyUser, UserController.create);
 
 const useUserRouter = (app) => {
   app.use(userRouter.routes());
