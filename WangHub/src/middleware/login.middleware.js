@@ -3,13 +3,21 @@
  * @Author     : wangchao
  * @Date       : 2023-09-08 14:43
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-13 14:24
+ * @LastTime   : 2023-09-13 16:28
  * @desc       :
  */
 
+const jwt = require("jsonwebtoken");
+
 const userService = require("../service/user.service");
 const md5password = require("../utils/md5-password");
-const { NAME_OR_PASSWORD_IS_REQUIRED, NAME_IS_NOT_EXISTS, PASSWORD_IS_ERROR } = require("../config/error-constants");
+const {
+  NAME_OR_PASSWORD_IS_REQUIRED,
+  NAME_IS_NOT_EXISTS,
+  PASSWORD_IS_ERROR,
+  UN_AUTHORIZATION,
+} = require("../config/error-constants");
+const { PUBLIC_KEY } = require("../config/screct");
 
 const verifyUser = async (ctx, next) => {
   // 用户名或密码不能为空
@@ -35,6 +43,24 @@ const verifyUser = async (ctx, next) => {
   await next();
 };
 
+const verifyAuth = async (ctx, next) => {
+  const authorization = ctx.headers.authorization;
+  const token = authorization.replace("Bearer ", "");
+
+  try {
+    const result = jwt.verify(token, PUBLIC_KEY, {
+      algorithm: ["RS256"],
+    });
+
+    ctx.user = result;
+
+    await next();
+  } catch (error) {
+    ctx.app.emit("error", UN_AUTHORIZATION, ctx);
+  }
+};
+
 module.exports = {
   verifyUser,
+  verifyAuth,
 };
