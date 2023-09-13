@@ -9,11 +9,11 @@
 
 const KoaRouter = require("@koa/router");
 const UserController = require("../controller/user.controller");
-const { verifyUser } = require("../middleware/user.middleware");
+const { verifyUser, encryptionPassword } = require("../middleware/user.middleware");
 
 const userRouter = new KoaRouter({ prefix: "/user" });
 
-userRouter.post("/register", verifyUser, UserController.create);
+userRouter.post("/register", verifyUser, encryptionPassword, UserController.create);
 
 const useUserRouter = (app) => {
   app.use(userRouter.routes());

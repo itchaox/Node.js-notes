@@ -3,11 +3,12 @@
  * @Author     : wangchao
  * @Date       : 2023-09-08 14:43
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-08 15:27
+ * @LastTime   : 2023-09-13 10:20
  * @desc       :
  */
 
 const userService = require("../service/user.service");
+const md5password = require("../utils/md5-password");
 
 const { NAME_OR_PASSWORD_IS_REQUIRED, NAME_IS_ALREADY_EXISTS } = require("../config/error-constants");
 
@@ -29,6 +30,18 @@ const verifyUser = async (ctx, next) => {
   await next();
 };
 
+const encryptionPassword = async (ctx, next) => {
+  // 1. 取出密码
+  const { password } = ctx.request.body;
+
+  // 2. 加密
+  ctx.request.body.password = md5password(password);
+
+  // 3. 执行下一个中间件
+  await next();
+};
+
 module.exports = {
   verifyUser,
+  encryptionPassword,
 };
