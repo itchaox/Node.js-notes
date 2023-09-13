@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-08 10:22
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-13 15:28
+ * @LastTime   : 2023-09-13 16:01
  * @desc       :
  */
 
@@ -14,9 +14,10 @@ class LoginController {
   sign(ctx, next) {
     const { id, name } = ctx.user;
 
-    const token = jwt.sign({ id, name }, PRIVATE_KEY);
-
-    console.log("🚀  token:", token);
+    const token = jwt.sign({ id, name }, PRIVATE_KEY, {
+      expiresIn: 24 * 60 * 60,
+      algorithm: "RS256",
+    });
 
     ctx.body = {
       code: 0,
