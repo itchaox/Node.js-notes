@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-08 15:13
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-13 16:23
+ * @LastTime   : 2023-09-14 15:56
  * @desc       :
  */
 const app = require("../app");
@@ -13,6 +13,7 @@ const {
   NAME_IS_NOT_EXISTS,
   PASSWORD_IS_ERROR,
   UN_AUTHORIZATION,
+  IS_NOT_PERMISSION,
 } = require("../config/error-constants");
 
 app.on("error", (error, ctx) => {
@@ -39,6 +40,10 @@ app.on("error", (error, ctx) => {
     case UN_AUTHORIZATION:
       code = 1005;
       message = "token 无效或token过期, 请稍后重试~";
+      break;
+    case IS_NOT_PERMISSION:
+      code = 1006;
+      message = "没有当前操作的权限~";
       break;
   }
 
