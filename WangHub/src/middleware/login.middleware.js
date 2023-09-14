@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-08 14:43
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-13 16:28
+ * @LastTime   : 2023-09-14 11:08
  * @desc       :
  */
 
@@ -45,6 +45,11 @@ const verifyUser = async (ctx, next) => {
 
 const verifyAuth = async (ctx, next) => {
   const authorization = ctx.headers.authorization;
+
+  if (!authorization) {
+    return ctx.app.emit("error", UN_AUTHORIZATION, ctx);
+  }
+
   const token = authorization.replace("Bearer ", "");
 
   try {
