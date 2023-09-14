@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-14 11:10
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-14 14:42
+ * @LastTime   : 2023-09-14 15:18
  * @desc       :
  */
 
@@ -48,6 +48,19 @@ class MomentController {
     ctx.body = {
       code: 0,
       message: "数据查询成功~",
+      data: result,
+    };
+  }
+
+  async update(ctx, next) {
+    const { momentId } = ctx.params;
+
+    const { content } = ctx.request.body;
+
+    const result = await momentService.update(momentId, content);
+    ctx.body = {
+      code: 0,
+      message: "数据修改成功~",
       data: result,
     };
   }
