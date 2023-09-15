@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-14 11:24
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-14 15:20
+ * @LastTime   : 2023-09-15 10:12
  * @desc       :
  */
 const connection = require("../app/database");
@@ -48,6 +48,12 @@ WHERE m.id =  ? ;
   async update(momentId, content) {
     const statement = `UPDATE moment SET content = ? WHERE id = ? ;`;
     const [result] = await connection.execute(statement, [content, momentId]);
+    return result;
+  }
+
+  async remove(momentId) {
+    const statement = `DELETE FROM moment WHERE id = ? ;`;
+    const [result] = await connection.execute(statement, [momentId]);
     return result;
   }
 }

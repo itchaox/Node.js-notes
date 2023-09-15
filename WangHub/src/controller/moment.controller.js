@@ -3,7 +3,7 @@
  * @Author     : wangchao
  * @Date       : 2023-09-14 11:10
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-14 15:18
+ * @LastTime   : 2023-09-15 10:11
  * @desc       :
  */
 
@@ -61,6 +61,18 @@ class MomentController {
     ctx.body = {
       code: 0,
       message: "数据修改成功~",
+      data: result,
+    };
+  }
+
+  async remove(ctx, next) {
+    const { momentId } = ctx.params;
+
+    const result = await momentService.remove(momentId);
+
+    ctx.body = {
+      code: 0,
+      message: "数据删除成功~",
       data: result,
     };
   }

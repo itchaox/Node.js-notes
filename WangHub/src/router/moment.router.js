@@ -3,13 +3,13 @@
  * @Author     : wangchao
  * @Date       : 2023-09-13 13:45
  * @LastAuthor : wangchao
- * @LastTime   : 2023-09-14 15:55
+ * @LastTime   : 2023-09-15 10:16
  * @desc       :
  */
 
 const KoaRouter = require("@koa/router");
 const { verifyAuth } = require("../middleware/login.middleware");
-const { create, getList, getMoment, update } = require("../controller/moment.controller");
+const { create, getList, getMoment, update, remove } = require("../controller/moment.controller");
 const { verifyMomentPermission } = require("../middleware/permission.middleware");
 
 const momentRouter = new KoaRouter({ prefix: "/moment" });
@@ -18,6 +18,7 @@ const momentRouter = new KoaRouter({ prefix: "/moment" });
 momentRouter.post("/", verifyAuth, create);
 
 // 删
+momentRouter.delete("/:momentId", verifyAuth, verifyMomentPermission, remove);
 
 // 改`
 momentRouter.patch("/:momentId", verifyAuth, verifyMomentPermission, update);
